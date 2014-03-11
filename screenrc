@@ -1,0 +1,10 @@
+startup_message off
+vbell off
+term screen-256color
+scrollback 50000
+
+# Tab bar
+
+hardstatus off
+hardstatus alwayslastline
+hardstatus string "%{+b wk} %-w%{+b wk} %n %t %{-}%+w %41=%H @ %l %-= %= %D,%c:%s "
