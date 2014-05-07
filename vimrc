@@ -44,7 +44,7 @@ set tabstop=4
 set lbr
 set tw=500
 
-set wrap
+set nowrap
 
 " jump lines when wrapped
 map j gj
