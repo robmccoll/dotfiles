@@ -10,3 +10,11 @@ $\[\033[00m\]"
 
 export SVN_EDITOR=vim
 export EDITOR=vim
+
+export PATH=$PATH:$HOME/.local/bin
+
+# Delete duplicate blank lines, style via astyle
+function style() {
+  sed -i '/^[ \t]*/{N; /^[ \t]*\n$/d}' $@
+  astyle $@
+}

@@ -1,0 +1,13 @@
+--indent=spaces=2
+--indent-classes
+--indent-switches
+--indent-namespaces
+--indent-preproc-define
+--break-blocks
+--pad-oper
+--unpad-paren
+--style=1tbs
+--align-pointer=name
+--align-reference=name
+--add-brackets
+--convert-tabs

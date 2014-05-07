@@ -27,5 +27,6 @@ add_to_home "bashrc"
 add_to_home "vimrc"
 add_dir_to_home "vim"
 add_to_home "screenrc"
+add_to_home "astylerc"
 
 . ~/.bashrc
