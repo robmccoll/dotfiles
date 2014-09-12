@@ -2,7 +2,7 @@
 --indent-classes
 --indent-switches
 --indent-namespaces
---indent-preproc-define
+-w
 --break-blocks
 --pad-oper
 --unpad-paren
