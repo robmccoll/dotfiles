@@ -60,6 +60,20 @@ vnoremap < <<CR>gv
 " enable mouse support
 set mouse=a
 
+" session saving and loading
+map <F2> :Sq<CR>
+set ssop+=folds  " save folds
+command Sq call SaveAndQuit()
+command S call Save()
+function! Save()
+  :mksession! .session.vim
+  :wa
+endfun
+function! SaveAndQuit()
+  :mksession! .session.vim
+  :wqa
+endfun
+
 " Restore cursor position to where it was before
 augroup JumpCursorOnEdit
    au!
