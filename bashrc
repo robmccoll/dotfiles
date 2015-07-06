@@ -27,9 +27,14 @@ alias vs='vim -S .session.vim'
 alias mkae='make'
 alias maek='make'
 alias mke='make'
+alias gpull='git pull'
+alias gpsh='git push'
+alias gst='git status'
+alias gd='git diff'
 alias atp-get='apt-get'
 alias cd..='cd ..'
 alias ..='cd ..'
+alias la='ls -hal --color '
 
 # Delete duplicate blank lines, style via astyle
 function style() {
@@ -115,6 +120,10 @@ histogram() {
   else
     cat $1 | sort -k $field -n -t ',' | cut -d ',' -f $field | uniq -c
   fi
+}
+
+hex() {
+  xxd -ps
 }
 
 if [ -f $HOME/.bashrc_local ]; then
