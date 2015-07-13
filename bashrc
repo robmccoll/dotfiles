@@ -126,6 +126,19 @@ hex() {
   xxd -ps
 }
 
+tmpl() {
+  if [ "$#" = "0" ]; then
+    echo "usage: template <file>      print all templates in file"
+    echo "usage: template <key> <val> replace key with val. template stdin to stdout"
+  elif [ "$#" = "1" ]; then
+    cat $1 | sed -e 's/}}"/}}"\n/' | grep "{{[^}]*}}" | sed -e 's/[^{}]*{{\.//' -e 's/}}[^{}]*//' | sort | uniq
+  elif [ "$#" = "2" ]; then
+    sed -e "s/{{\.$1}}/$2/g"
+  else
+    echo "incorrect number of args"
+  fi
+}
+
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
 fi
