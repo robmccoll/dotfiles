@@ -3,10 +3,11 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-function parse_git_dirty {
+parse_git_dirty() {
   [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit, working directory clean" ]] && echo "] [dirty"
 }
-function parse_git_branch {
+
+parse_git_branch() {
   git branch  2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
 }
 
@@ -27,9 +28,13 @@ alias vs='vim -S .session.vim'
 alias mkae='make'
 alias maek='make'
 alias mke='make'
+alias clera='clear'
+alias claer='clear'
 alias gpull='git pull'
 alias gpsh='git push'
 alias gst='git status'
+alias gco='git checkout'
+alias gmerge='git merge'
 alias gd='git diff'
 alias atp-get='apt-get'
 alias cd..='cd ..'
@@ -37,7 +42,7 @@ alias ..='cd ..'
 alias la='ls -hal --color '
 
 # Delete duplicate blank lines, style via astyle
-function style() {
+style() {
   sed -i '/^[ \t]*/{N; /^[ \t]*\n$/d}' $@
   astyle $@
 }
@@ -91,9 +96,20 @@ upto() {
 }
 
 md() {
-  date '+%Y.%m.%d'
+  if [ $# -lt 1 ]; then
+    date '+%Y.%m.%d'
+  else
+    vim `date '+%Y.%m.%d'`$1
+  fi
 }
 
+mdt() {
+  if [ $# -lt 1 ]; then
+    date '+%Y.%m.%d.%H:%M:%S'
+  else
+    vim `date '+%Y.%m.%d.%H:%M:%S'`$1
+  fi
+}
 
 histogram() {
   if [ $# -lt 1 ]
@@ -126,6 +142,14 @@ hex() {
   xxd -ps
 }
 
+rand64() {
+  if [ $# -lt 1 ]; then
+    head -c 10 /dev/urandom | base64 -w 0 | sed -e 's/=//g'
+  else
+    head -c $1 /dev/urandom | base64 -w 0 | sed -e 's/=//g'
+  fi
+}
+
 tmpl() {
   if [ "$#" = "0" ]; then
     echo "usage: template <file>      print all templates in file"
@@ -136,6 +160,14 @@ tmpl() {
     sed -e "s/{{\.$1}}/$2/g"
   else
     echo "incorrect number of args"
+  fi
+}
+
+gerp() {
+  if [ "$#" = "2" ]; then
+    grep -in  $2 `find . -name "*.$1"`
+  else
+    echo "usage: gerp <filextension> <pattern>"
   fi
 }
 
