@@ -41,6 +41,8 @@ alias cd..='cd ..'
 alias ..='cd ..'
 alias la='ls -hal --color '
 
+bind "set completion-ignore-case on"
+
 # Delete duplicate blank lines, style via astyle
 style() {
   sed -i '/^[ \t]*/{N; /^[ \t]*\n$/d}' $@
@@ -165,11 +167,19 @@ tmpl() {
 
 gerp() {
   if [ "$#" = "2" ]; then
-    grep -in  $2 `find . -name "*.$1"`
+    grep -in  "$2" `find . -name "*.$1"`
   else
     echo "usage: gerp <filextension> <pattern>"
   fi
 }
+
+docker_ip() {
+  docker inspect --format '{{ .NetworkSettings.IPAddress }}' $1
+}
+
+# unified bash history
+shopt -s histappend
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
