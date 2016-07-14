@@ -60,6 +60,12 @@ vnoremap < <<CR>gv
 " enable mouse support
 set mouse=a
 
+" F3 lists buffers and selects one
+nnoremap <F3> :ls<CR>:bu<Space>
+
+" godef opens in new tab
+let g:godef_split = 2
+
 " session saving and loading
 map <F2> :Sq<CR>
 set ssop+=folds  " save folds
