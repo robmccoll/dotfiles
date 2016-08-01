@@ -23,23 +23,33 @@ export PATH=$PATH:$HOME/.local/bin
 
 # aliases
 alias gp='grep -rin '
+
 alias ll='ls -hl --color '
+alias la='ls -hal --color '
+
 alias vs='vim -S .session.vim'
+
+alias clera='clear'
+alias claer='clear'
+
+alias atp-get='apt-get'
+
+alias cd..='cd ..'
+alias ..='cd ..'
+
 alias mkae='make'
 alias maek='make'
 alias mke='make'
-alias clera='clear'
-alias claer='clear'
+
+alias git_tree='git log --all --graph --decorate --oneline --simplify-by-decoration'
+alias gtree='git_tree'
 alias gpull='git pull'
 alias gpsh='git push'
 alias gst='git status'
+alias gdiff='git diff'
 alias gco='git checkout'
 alias gmerge='git merge'
 alias gd='git diff'
-alias atp-get='apt-get'
-alias cd..='cd ..'
-alias ..='cd ..'
-alias la='ls -hal --color '
 
 bind "set completion-ignore-case on"
 
@@ -144,6 +154,10 @@ hex() {
   xxd -ps
 }
 
+fromhex() {
+  xxd -r -p
+}
+
 rand64() {
   if [ $# -lt 1 ]; then
     head -c 10 /dev/urandom | base64 -w 0 | sed -e 's/=//g'
@@ -157,9 +171,9 @@ tmpl() {
     echo "usage: template <file>      print all templates in file"
     echo "usage: template <key> <val> replace key with val. template stdin to stdout"
   elif [ "$#" = "1" ]; then
-    cat $1 | sed -e 's/}}"/}}"\n/' | grep "{{[^}]*}}" | sed -e 's/[^{}]*{{\.//' -e 's/}}[^{}]*//' | sort | uniq
+    cat $1 | sed -e 's/}}"/}}"\n/' | grep "{{[^}]*}}" | sed -e 's/[^{}]*{{ *//' -e 's/ *}}[^{}]*//' | sort | uniq
   elif [ "$#" = "2" ]; then
-    sed -e "s/{{\.$1}}/$2/g"
+    sed -e "s/{{ *$1 *}}/$2/g"
   else
     echo "incorrect number of args"
   fi
@@ -167,17 +181,59 @@ tmpl() {
 
 gerp() {
   if [ "$#" = "2" ]; then
-    grep -in  "$2" `find . -name "*.$1"`
+    if [ "$1" = "go" ]; then
+      grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor
+    elif [ "$1" = "js" ]; then
+      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules`
+    else
+      grep -in  "$2" `find . -name "*.$1"`
+    fi
   else
     echo "usage: gerp <filextension> <pattern>"
   fi
 }
 
 docker_ip() {
-  docker inspect --format '{{ .NetworkSettings.IPAddress }}' $1
+  if [ $# -lt 2 ]; then
+    docker inspect --format '{{ .NetworkSettings.IPAddress }}' $1
+  else
+    HOST=$2
+    IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' $2)
+    cat /etc/hosts | grep -v $HOST > newhosts
+    echo $IP $HOST >> newhosts
+    sudo mv newhosts /etc/hosts
+  fi
+}
+
+zoom_in() {
+  SIZE=`grep 'FontName' ~/.config/xfce4/terminal/terminalrc | cut -d' ' -f 2`
+  NEWSIZE=$((SIZE + 2))
+  echo $NEWSIZE
+  REGEXPR='s/FontName.*/FontName=Monospace '$NEWSIZE'/g'
+  sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
+}
+
+zoom_set() {
+  SIZE=`grep 'FontName' ~/.config/xfce4/terminal/terminalrc | cut -d' ' -f 2`
+  NEWSIZE=$1
+  echo $NEWSIZE
+  REGEXPR='s/FontName.*/FontName=Monospace '$NEWSIZE'/g'
+  sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
+}
+
+zoom_out() {
+  SIZE=`grep 'FontName' ~/.config/xfce4/terminal/terminalrc | cut -d' ' -f 2`
+  NEWSIZE=$((SIZE - 2))
+  if [ $NEWSIZE -lt 6 ]; then
+    NEWSIZE=6
+  fi
+  echo $NEWSIZE
+  REGEXPR='s/FontName.*/FontName=Monospace '$NEWSIZE'/g'
+  sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
 }
 
 # unified bash history
+export HISTSIZE=""
 shopt -s histappend
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
