@@ -205,6 +205,18 @@ docker_ip() {
   fi
 }
 
+docker_cleanup() {
+  DEADINSTANCES=$(docker ps -a -q -f status=exited)
+  if [ "$DEADINSTANCES" != "" ]; then
+    docker rm $DEADINSTANCES
+  fi
+
+  DANGLINGIMAGES=$(docker images | grep "^<none>" | awk "{print $3}")
+  if [ "$DANGLINGIMAGES" != "" ]; then
+    docker rmi $DANGLINGIMAGES
+  fi
+}
+
 zoom_in() {
   SIZE=`grep 'FontName' ~/.config/xfce4/terminal/terminalrc | cut -d' ' -f 2`
   NEWSIZE=$((SIZE + 2))
