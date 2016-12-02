@@ -11,6 +11,12 @@ parse_git_branch() {
   git branch  2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
 }
 
+git_blame_stat() {
+  find . -name "*.$1" | grep -v vendor | xargs -n 1 git blame -w | \
+    sed -e 's/[^(]* (//' -e 's/ *20.*//'  |  tr '[:upper:]' '[:lower:]' | \
+    sort | uniq -c
+}
+
 # User specific aliases and functions
 
 export PS1='\[\033[01;34m\][\[\033[01;31m\]\u@\h\[\033[01;34m\]] [\[\033[01;31m\]\t\[\033[01;34m\]] [\[\033[01;31m\]\w\[\033[01;34m\]] $(parse_git_branch)

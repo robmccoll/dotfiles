@@ -246,8 +246,8 @@ let g:template['c'] = {}
 let g:template['c']['cc'] = "/*  */\<left>\<left>\<left>"
 let g:template['c']['cd'] = "/**<  */\<left>\<left>\<left>"
 let g:template['c']['de'] = "#define     "
-let g:template['c']['in'] = "#include    \"\"\<left>"
-let g:template['c']['is'] = "#include  <>\<left>"
+let g:template['c']['in'] = "#include \"\"\<left>"
+let g:template['c']['is'] = "#include <>\<left>"
 let g:template['c']['ff'] = "#ifndef  \<c-r>=GetFileName()\<cr>\<CR>#define  \<c-r>=GetFileName()\<cr>".
             \repeat("\<cr>",5)."#endif  /*\<c-r>=GetFileName()\<cr>*/".repeat("\<up>",3)
 let g:template['c']['for'] = "for( ".g:rs."...".g:re." ; ".g:rs."...".g:re." ; ".g:rs."...".g:re." )\<cr>{\<cr>".

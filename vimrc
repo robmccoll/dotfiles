@@ -42,7 +42,7 @@ set tabstop=4
 
 " linebreak at 500 chars
 set lbr
-set tw=500
+set tw=80
 
 set nowrap
 
