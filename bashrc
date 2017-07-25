@@ -89,7 +89,12 @@ set_prompt () {
     # the text color to the default.
     PS1+="$Blue[$Red\\w$Blue] $(parse_git_branch)
 $Blue\\\$$Reset"
+    history -a; history -c; history -r
 }
+
+# unified bash history
+export HISTSIZE=""
+shopt -s histappend
 
 trap 'timer_start' DEBUG
 PROMPT_COMMAND='set_prompt'
@@ -321,11 +326,6 @@ zoom_out() {
   REGEXPR='s/FontName.*/FontName=Monospace '$NEWSIZE'/g'
   sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
 }
-
-# unified bash history
-export HISTSIZE=""
-shopt -s histappend
-PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
