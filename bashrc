@@ -327,6 +327,10 @@ zoom_out() {
   sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
 }
 
+if [ -f $HOME/.dotfiles/bash/git-completion.bash ]; then
+    . $HOME/.dotfiles/bash/git-completion.bash
+fi
+
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
 fi
