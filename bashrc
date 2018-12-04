@@ -1,7 +1,9 @@
 # Source global definitions
+[ -z "$PS1" ] && return
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
+
 
 Blue='\[\e[01;34m\]'
 White='\[\e[01;37m\]'
@@ -21,7 +23,7 @@ parse_git_branch() {
 }
 
 git_blame_stat() {
-  find . -name "*.$1" | grep -v vendor | xargs -n 1 git blame -w | \
+  find . -name "*.$1" | grep -v vendor -v dependencies | xargs -n 1 git blame -w | \
     sed -e 's/[^(]* (//' -e 's/ *20.*//'  |  tr '[:upper:]' '[:lower:]' | \
     sort | uniq -c
 }
@@ -157,14 +159,16 @@ down() {
 up() {
   if [ "$#" != "0" ]; then
     count=0
+    dest=''
     while [ "$count" != "$1" ]; do
-      cd ..
+      dest="$dest../"
       count=`expr $count + 1`
       if [ "$count" == "100" ]; then
         echo "Recursion limit reached"
         break
       fi
     done
+    cd $dest
   else
     cd ..
   fi

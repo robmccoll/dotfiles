@@ -1,3 +1,5 @@
+highlight Pmenu ctermbg=blue
+highlight goTodo ctermbg=red
 
 " normal backspace
 set backspace=2
@@ -12,6 +14,9 @@ set smartindent
 
 " enable filetype plugins
 filetype plugin on
+
+" ignore case on file autocomplete
+set wildignorecase
 
 " line ruler and ruler at bottom
 set number
