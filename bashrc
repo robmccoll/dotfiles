@@ -335,6 +335,10 @@ if [ -f $HOME/.dotfiles/bash/git-completion.bash ]; then
     . $HOME/.dotfiles/bash/git-completion.bash
 fi
 
+if [ -f $HOME/.dotfiles/bash/kubectl-completion.bash ]; then
+    . $HOME/.dotfiles/bash/kubectl-completion.bash
+fi
+
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
 fi
