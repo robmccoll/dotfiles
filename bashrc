@@ -65,7 +65,7 @@ set_prompt () {
     Last_Command=$? # Must come first!
 
     # Add a bright white exit status for the last command
-    PS1=""
+    PS1=''
     # If it was successful, print a green check mark. Otherwise, print
     # a red X.
     if [[ $Last_Command == 0 ]]; then
@@ -90,7 +90,7 @@ set_prompt () {
     # Print the working directory and prompt marker in blue, and reset
     # the text color to the default.
     PS1+="$Blue[$Red\\w$Blue] $(parse_git_branch)
-$Blue\\\$$Reset"
+$Blue"'\[\033k\033\\\]'"\\\$$Reset"
     history -a; history -c; history -r
 }
 
@@ -271,13 +271,17 @@ gerp() {
     if [ "$1" = "go" ]; then
       grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor
     elif [ "$1" = "js" ]; then
-      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules`
+      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules | grep -v .chunk.js`
     else
       grep -in  "$2" `find . -name "*.$1"`
     fi
   else
     echo "usage: gerp <filextension> <pattern>"
   fi
+}
+
+gerpf() {
+  gerp $@ | sed -e 's/:.*//' | sort | uniq
 }
 
 docker_ip() {
@@ -301,6 +305,27 @@ docker_cleanup() {
   DANGLINGIMAGES=$(docker images | grep "^<none>" | awk "{print $3}")
   if [ "$DANGLINGIMAGES" != "" ]; then
     docker rmi $DANGLINGIMAGES
+  fi
+}
+
+docker_kill() {
+  INSTANCES=$(docker ps -a -q)
+  if [ "$INSTANCES" != "" ]; then
+    docker rm -f $INSTANCES
+  fi
+}
+
+swp() {
+  FILES=$(find . -name ".*.sw[po]")
+  if [ "$FILES" == "" ]; then
+    echo "No swap files found."
+    return
+  fi
+  echo $FILES
+  echo "Delete? (y/n)"
+  read YN
+  if [ "$YN" == "y" ] || [ "$YN" == "Y" ]; then
+    rm `find . -name ".*.sw[po]"`
   fi
 }
 
@@ -331,6 +356,40 @@ zoom_out() {
   sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
 }
 
+play_result() {
+  if [ $? -eq 0 ]; then
+    aplay /usr/share/sounds/sound-icons/xylofon.wav
+    aplay /usr/share/sounds/sound-icons/xylofon.wav
+    aplay /usr/share/sounds/sound-icons/xylofon.wav
+  else
+    aplay /usr/share/sounds/sound-icons/klavichord-4.wav
+    aplay /usr/share/sounds/sound-icons/klavichord-4.wav
+    aplay /usr/share/sounds/sound-icons/klavichord-4.wav
+  fi
+}
+
+urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+
+base64pad() {
+  read DATA
+  REM=$(expr ${#DATA} % 4)
+  if [ "$REM" == "2" ]; then 
+    echo "$DATA=="
+  elif [ "$REM" == "3" ]; then 
+    echo "$DATA="
+  else 
+    echo "$DATA"
+  fi
+}
+
+jwsq() {
+  IFS='.' read PROTECTED PAYLOAD SIG
+  PROTECTED=$(echo $PROTECTED | base64pad | base64 -d)
+  PAYLOAD=$(echo $PAYLOAD | base64pad | base64 -d)
+  echo $PAYLOAD
+  echo '{"protected":'"$(echo $PROTECTED)"', "payload":'"$(echo $PAYLOAD)"', "signature":"'"$(echo $SIG)"'"}' | jq $@
+}
+
 if [ -f $HOME/.dotfiles/bash/git-completion.bash ]; then
     . $HOME/.dotfiles/bash/git-completion.bash
 fi
@@ -342,3 +401,5 @@ fi
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
 fi
+
+export SASS_PATH=./node_modules

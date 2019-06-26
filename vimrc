@@ -11,6 +11,7 @@ syntax on
 filetype indent on
 set autoindent
 set smartindent
+set background=dark
 
 " enable filetype plugins
 filetype plugin on

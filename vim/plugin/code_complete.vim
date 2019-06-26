@@ -250,7 +250,7 @@ let g:template['c']['in'] = "#include \"\"\<left>"
 let g:template['c']['is'] = "#include <>\<left>"
 let g:template['c']['ff'] = "#ifndef  \<c-r>=GetFileName()\<cr>\<CR>#define  \<c-r>=GetFileName()\<cr>".
             \repeat("\<cr>",5)."#endif  /*\<c-r>=GetFileName()\<cr>*/".repeat("\<up>",3)
-let g:template['c']['for'] = "for( ".g:rs."...".g:re." ; ".g:rs."...".g:re." ; ".g:rs."...".g:re." )\<cr>{\<cr>".
+let g:template['c']['for'] = "for( ".g:rs."...".g:re." ; ".g:rs."...".g:re." ; ".g:rs."...".g:re." ) {\<cr>".
             \g:rs."...".g:re."\<cr>}\<cr>"
 let g:template['c']['main'] = "int\<cr>main(int argc, char \*argv\[\])\<cr>{\<cr>".g:rs."...".g:re."\<cr>}"
 let g:template['c']['switch'] = "switch ( ".g:rs."...".g:re." )\<cr>{\<cr>case ".g:rs."...".g:re." :\<cr>break;\<cr>case ".
@@ -263,6 +263,25 @@ let g:template['c']['ife'] = "if( ".g:rs."...".g:re." )\<cr>{\<cr>".g:rs."...".g
 " ---------------------------------------------
 " C++ templates
 let g:template['cpp'] = g:template['c']
+
+
+" ---------------------------------------------
+" Go templates
+let g:template['go'] = {}
+let g:template['go']['cc'] = "/*  */\<left>\<left>\<left>"
+let g:template['go']['cd'] = "/**<  */\<left>\<left>\<left>"
+let g:template['go']['for'] = "for ".g:rs."...".g:re." ; ".g:rs."...".g:re." ; ".g:rs."...".g:re." {\<cr>".
+            \g:rs."...".g:re."\<cr>}\<cr>"
+let g:template['go']['main'] = "func main() {\<cr>".g:rs."...".g:re."\<cr>}"
+let g:template['go']['if'] = "if ".g:rs."...".g:re."; ".g:rs."...".g:re." {\<cr>".g:rs."...".g:re."\<cr>}"
+let g:template['go']['while'] = "while ".g:rs."...".g:re."  {\<cr>".g:rs."...".g:re."\<cr>}"
+
+" ---------------------------------------------
+" javscript templates
+let g:template['js'] = {}
+let g:template['js']['comp'] = "class ".g:rs."...".g:re." extends React.Component {\<cr>constructor(props) {\<cr>super(props);\<cr>}\<cr>render() {\<cr>return null;\<cr>}\<cr>}"
+let g:template['javascript'] = g:template['js']
+let g:template['javascript.jsx'] = g:template['js']
 
 " ---------------------------------------------
 " common templates
