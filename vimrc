@@ -71,6 +71,9 @@ vnoremap < <<CR>gv
 " enable mouse support
 set mouse=a
 
+" more atomic writing for certain file watchers (webpack-dev-server)
+set backupcopy=yes
+
 " F3 lists buffers and selects one
 nnoremap <F3> :ls<CR>:bu<Space>
 

@@ -17,7 +17,11 @@ parse_git_branch() {
   b=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
   if [[ $? == 0 ]]; then
     echo -n "$Blue[$Red$b"
-    [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit, working directory clean" ]] && echo -n "$Blue] [${Red}$FancyX"
+    if [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit, working tree clean" ]]; then
+      echo -n "$Blue] [${Red}$FancyX"
+    else
+      echo -n "$Blue] [${Green}$Checkmark"
+    fi
     echo "$Blue]"
   fi
 }
@@ -269,11 +273,11 @@ tmpl() {
 gerp() {
   if [ "$#" = "2" ]; then
     if [ "$1" = "go" ]; then
-      grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor
+      grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor | less -F
     elif [ "$1" = "js" ]; then
-      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules | grep -v .chunk.js`
+      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules | grep -v .chunk.js` | less -F
     else
-      grep -in  "$2" `find . -name "*.$1"`
+      grep -in  "$2" `find . -name "*.$1"` | less -F
     fi
   else
     echo "usage: gerp <filextension> <pattern>"
@@ -281,7 +285,7 @@ gerp() {
 }
 
 gerpf() {
-  gerp $@ | sed -e 's/:.*//' | sort | uniq
+  gerp $@ | sed -e 's/:.*//' | sort | uniq | less -F
 }
 
 docker_ip() {
