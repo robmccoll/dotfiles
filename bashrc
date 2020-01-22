@@ -273,11 +273,11 @@ tmpl() {
 gerp() {
   if [ "$#" = "2" ]; then
     if [ "$1" = "go" ]; then
-      grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor | less -F
+      grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor | less -F --no-init
     elif [ "$1" = "js" ]; then
-      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules | grep -v .chunk.js` | less -F
+      grep -in  "$2" `find . -name "*.$1" | grep -v node_modules | grep -v .chunk.js` | less -F --no-init
     else
-      grep -in  "$2" `find . -name "*.$1"` | less -F
+      grep -in  "$2" `find . -name "*.$1"` | less -F --no-init
     fi
   else
     echo "usage: gerp <filextension> <pattern>"
@@ -285,7 +285,7 @@ gerp() {
 }
 
 gerpf() {
-  gerp $@ | sed -e 's/:.*//' | sort | uniq | less -F
+  gerp $@ | sed -e 's/:.*//' | sort | uniq | less -F --no-init
 }
 
 docker_ip() {
@@ -394,6 +394,13 @@ jwsq() {
   echo '{"protected":'"$(echo $PROTECTED)"', "payload":'"$(echo $PAYLOAD)"', "signature":"'"$(echo $SIG)"'"}' | jq $@
 }
 
+jwesq() {
+  IFS='.' read ENCHEAD SIGHEAD SIG IV CIPHER TAG
+  ENCHEAD=$(echo $ENCHEAD | base64pad | base64 -d)
+  SIGHEAD=$(echo $SIGHEAD | base64pad | base64 -d)
+  echo '{"encHead":'$(echo $ENCHEAD)', "sigHead":'$(echo $SIGHEAD)',"sig":"'"$(echo $SIG)"'", "iv":"'"$(echo $IV)"'", "cipher":"'$(echo $CIPHER)'", "tag":"'$(echo $TAG)'"}' | jq $@
+}
+
 if [ -f $HOME/.dotfiles/bash/git-completion.bash ]; then
     . $HOME/.dotfiles/bash/git-completion.bash
 fi
@@ -401,6 +408,8 @@ fi
 if [ -f $HOME/.dotfiles/bash/kubectl-completion.bash ]; then
     . $HOME/.dotfiles/bash/kubectl-completion.bash
 fi
+
+complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-9_.-]*$//'\`" make
 
 if [ -f $HOME/.bashrc_local ]; then
 	. $HOME/.bashrc_local
