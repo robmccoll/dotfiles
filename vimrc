@@ -13,6 +13,9 @@ set autoindent
 set smartindent
 set background=dark
 
+" abandon vi compat to enable extra features
+set nocompatible
+
 " enable filetype plugins
 filetype plugin on
 
@@ -25,6 +28,8 @@ set ruler
 
 " show auto complete menu
 set wildmenu
+" find recursive
+set path+=**
 
 " bash completion
 set wildmode=list:longest
@@ -60,6 +65,12 @@ set nowrap
 " jump lines when wrapped
 map j gj
 map k gk
+
+" map tabularize shortcuts
+nmap <Leader>; :Tabularize/:\zs/l0l1<CR>
+nmap <Leader>= :Tabularize/=<CR>
+" nmap <Leader>w :Tabularize/\S\+\|`[^`]+`/l0l1<CR>
+nmap <Leader>w vi{:'<,'>Tabularize/\S\+/l0l1<CR>
 
 " write anywhere
 set virtualedit=all
