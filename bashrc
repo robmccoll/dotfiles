@@ -112,6 +112,7 @@ export PATH=$PATH:$HOME/.local/bin
 
 # aliases
 alias gp='grep -rin '
+alias scen='screen'
 
 alias ll='ls -hl --color '
 alias la='ls -hal --color '
@@ -122,6 +123,7 @@ alias clera='clear'
 alias claer='clear'
 
 alias atp-get='apt-get'
+alias atp='apt'
 
 alias cd..='cd ..'
 alias ..='cd ..'
@@ -276,6 +278,8 @@ gerp() {
       grep -in  "$2" `find . -name "*.$1"` | grep -v Godeps | grep -v vendor | less -F --no-init
     elif [ "$1" = "js" ]; then
       grep -in  "$2" `find . -name "*.$1" | grep -v node_modules | grep -v .chunk.js` | less -F --no-init
+    elif [ "$1" = "php" ]; then
+      grep -in  "$2" `find . -name "*.$1" | grep -v vendor` | less -F --no-init
     else
       grep -in  "$2" `find . -name "*.$1"` | less -F --no-init
     fi
@@ -333,6 +337,16 @@ swp() {
   fi
 }
 
+mv() {
+  if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
+    command mv "$@"
+    return
+  fi
+
+  read -ei "$1" newfilename
+  command mv -v -- "$1" "$newfilename"
+}
+
 zoom_in() {
   SIZE=`grep 'FontName' ~/.config/xfce4/terminal/terminalrc | cut -d' ' -f 2`
   NEWSIZE=$((SIZE + 2))
@@ -358,6 +372,10 @@ zoom_out() {
   echo $NEWSIZE
   REGEXPR='s/FontName.*/FontName=Monospace '$NEWSIZE'/g'
   sed -i "$REGEXPR" ~/.config/xfce4/terminal/terminalrc
+}
+
+go_list_deps() {
+  go list -f '{{ range .Imports }}{{ . }}{{ "\n" }}{{ end }}' ./... | sort | uniq
 }
 
 play_result() {
@@ -407,6 +425,10 @@ fi
 
 if [ -f $HOME/.dotfiles/bash/kubectl-completion.bash ]; then
     . $HOME/.dotfiles/bash/kubectl-completion.bash
+fi
+
+if [ -f $HOME/.dotfiles/bash/docker-completion.bash ]; then
+    . $HOME/.dotfiles/bash/docker-completion.bash
 fi
 
 complete -W "\`grep -oE '^[a-zA-Z0-9_.-]+:([^=]|$)' ?akefile | sed 's/[^a-zA-Z0-9_.-]*$//'\`" make

@@ -67,7 +67,7 @@ map j gj
 map k gk
 
 " map tabularize shortcuts
-nmap <Leader>; :Tabularize/:\zs/l0l1<CR>
+nmap <Leader>; vi{:'<,'>Tabularize/:\zs/l0l1<CR>
 nmap <Leader>= :Tabularize/=<CR>
 " nmap <Leader>w :Tabularize/\S\+\|`[^`]+`/l0l1<CR>
 nmap <Leader>w vi{:'<,'>Tabularize/\S\+/l0l1<CR>
