@@ -289,7 +289,7 @@ gerp() {
 }
 
 gerpf() {
-  gerp $@ | sed -e 's/:.*//' | sort | uniq | less -F --no-init
+  gerp "$@" | sed -e 's/:.*//' | sort | uniq | less -F --no-init
 }
 
 docker_ip() {
@@ -338,7 +338,7 @@ swp() {
 }
 
 mv() {
-  if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
+  if [ "$#" -ne 1 ]; then
     command mv "$@"
     return
   fi
