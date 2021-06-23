@@ -37,6 +37,9 @@ set wildmode=list:longest
 " highlight matching brackets
 set showmatch
 
+" open way more tabs
+set tabpagemax=100
+
 " search options
 set ignorecase
 set smartcase
@@ -68,9 +71,11 @@ map k gk
 
 " map tabularize shortcuts
 nmap <Leader>; vi{:'<,'>Tabularize/:\zs/l0l1<CR>
+nmap <Leader>: vi(:'<,'>Tabularize/:\zs/l0l1<CR>
 nmap <Leader>= :Tabularize/=<CR>
 " nmap <Leader>w :Tabularize/\S\+\|`[^`]+`/l0l1<CR>
 nmap <Leader>w vi{:'<,'>Tabularize/\S\+/l0l1<CR>
+nmap <Leader>W vi(:'<,'>Tabularize/\S\+/l0l1<CR>
 
 " write anywhere
 set virtualedit=all
